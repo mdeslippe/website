@@ -1,8 +1,8 @@
 {
-  "extends": "astro/tsconfigs/strictest",
-  "compilerOptions": {
-    "paths": {
-      "@website/*": ["./src/*"]
-    }
-  }
+	"extends": "astro/tsconfigs/strictest",
+	"compilerOptions": {
+		"paths": {
+			"@website/*": ["./src/*"]
+		}
+	}
 }
