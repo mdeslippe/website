@@ -110,12 +110,14 @@ StringResult string_free(String* string);
  * If the current capacity is less than `capacity`, the internal buffer is
  * reallocated to provide at least `capacity` characters of storage. Otherwise,
  * no action is taken.
- *
+ * 
+ * @pre `string` must be initialized with `string_init`.
+ * 
  * @note Success - Existing string content is preserved.
  *
  * @note Failure - The string remains unmodified.
  *
- * @param string Pointer to the string.
+ * @param string Pointer to the initialized string.
  * @param capacity Minimum capacity to reserve, including space for the
  *                 null-terminator.
  *
