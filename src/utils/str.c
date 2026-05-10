@@ -22,23 +22,6 @@ StringResult string_init(String* string) {
 
 }
 
-/**
- * @brief Releases resources owned by a string.
- *
- * Releases the internal buffer and resets the string to a zero-initialized
- * state.
- *
- * @note Idempotence - Calling `string_free` on a previously freed or
- *                     zero-initialized string is safe.
- *
- * @note Reinitialization - After this call, the string may be safely
- *                          reinitialized.
- *
- * @param string Pointer to the string to free.
- *
- * @return STRING_SUCCESS on success.
- * @return STRING_ERROR_ARGUMENT if `string` is NULL.
- */
 StringResult string_free(String* string) {
 
     if (string == NULL) {
