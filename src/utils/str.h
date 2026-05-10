@@ -3,7 +3,7 @@
 /**
  * @brief Total initial buffer size including null terminator.
  */
-#define DEFAULT_STRING_CAPACITY 16
+#define DEFAULT_STRING_CAPACITY ((size_t)16)
 
 /**
  * @brief Result codes returned by String operations.
