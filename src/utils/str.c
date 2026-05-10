@@ -81,7 +81,7 @@ StringResult string_reserve(String* string, size_t capacity) {
     size_t new_capacity = string->capacity;
 
     while (new_capacity < capacity) {
-        if (new_capacity > SIZE_MAX / 2) {
+        if (new_capacity > (SIZE_MAX / sizeof(char)) / 2) {
             new_capacity = capacity;
             break;
         }
