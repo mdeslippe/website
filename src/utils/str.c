@@ -31,7 +31,7 @@ StringResult string_init(String* string) {
         return STRING_ERROR_ARGUMENT;
     }
 
-    char* data = malloc(DEFAULT_STRING_CAPACITY * sizeof(char));
+    char* data = malloc(DEFAULT_STRING_CAPACITY);
 
     if (data == NULL) {
         return STRING_ERROR_ALLOCATION;
@@ -81,7 +81,7 @@ StringResult string_reserve(String* string, size_t capacity) {
     size_t new_capacity = string->capacity;
 
     while (new_capacity < capacity) {
-        if (new_capacity > (SIZE_MAX / sizeof(char)) / 2) {
+        if (new_capacity > SIZE_MAX / 2) {
             new_capacity = capacity;
             break;
         }
@@ -89,7 +89,7 @@ StringResult string_reserve(String* string, size_t capacity) {
         new_capacity = new_capacity * 2;
     }
 
-    char* data = realloc(string->data, new_capacity * sizeof(char));
+    char* data = realloc(string->data, new_capacity);
 
     if (data == NULL) {
         return STRING_ERROR_ALLOCATION;
