@@ -66,3 +66,40 @@ typedef struct {
      */
     char* data;
 } String;
+
+/**
+ * @brief Initializes a string.
+ * 
+ * Allocates internal storage and initializes the string to a valid, empty,
+ * null-terminated state.
+ * 
+ * @note Reinitialization - Calling `string_init` on an already initialized
+ *       string does not release previously allocated resources. The caller
+ *       must call `string_free` before reinitializing.
+ * 
+ * @param string Pointer to the string to initialize.
+ * 
+ * @return STRING_SUCCESS on success.
+ * @return STRING_ERROR_ARGUMENT if `string` is NULL.
+ * @return STRING_ERROR_ALLOCATION if memory allocation fails.
+ */
+StringResult string_init(String* string);
+
+/**
+ * @brief Releases resources owned by a string.
+ * 
+ * Releases the internal buffer and resets the string to a zero-initialized 
+ * state.
+ * 
+ * @note Idempotence - Calling `string_free` on a previously freed or
+ *                     zero-initialized string is safe.
+ * 
+ * @note Reinitialization - After this call, the string may be safely 
+ *                          reinitialized.
+ * 
+ * @param string Pointer to the string to free.
+ * 
+ * @return STRING_SUCCESS on success.
+ * @return STRING_ERROR_ARGUMENT if `string` is NULL.
+ */
+StringResult string_free(String* string);
