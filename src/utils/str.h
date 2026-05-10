@@ -103,3 +103,24 @@ StringResult string_init(String* string);
  * @return STRING_ERROR_ARGUMENT if `string` is NULL.
  */
 StringResult string_free(String* string);
+
+/**
+ * @brief Ensures that a string has at least the specified capacity.
+ *
+ * If the current capacity is less than `capacity`, the internal buffer is
+ * reallocated to provide at least `capacity` characters of storage. Otherwise,
+ * no action is taken.
+ *
+ * @note Success - Existing string content is preserved.
+ *
+ * @note Failure - The string remains unmodified.
+ *
+ * @param string Pointer to the string.
+ * @param capacity Minimum capacity to reserve, including space for the
+ *                 null-terminator.
+ *
+ * @return STRING_SUCCESS on success.
+ * @return STRING_ERROR_ARGUMENT if `string` is NULL or `capacity == 0`.
+ * @return STRING_ERROR_ALLOCATION if memory allocation fails.
+ */
+StringResult string_reserve(String* string, size_t capacity);
