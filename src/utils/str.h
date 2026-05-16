@@ -74,8 +74,9 @@ typedef struct {
  * null-terminated state.
  *
  * @note Reinitialization - Calling `string_init` on an already initialized
- *       string does not release previously allocated resources. The caller
- *       must call `string_free` before reinitializing.
+ *                          string does not release previously allocated
+ *                          resources. The caller must call `string_free` before
+ *                          reinitializing.
  *
  * @param string Pointer to the string to initialize.
  *
@@ -110,9 +111,9 @@ StringResult string_free(String* string);
  * If the current capacity is less than `capacity`, the internal buffer is
  * reallocated to provide at least `capacity` characters of storage. Otherwise,
  * no action is taken.
- * 
+ *
  * @pre `string` must be initialized with `string_init`.
- * 
+ *
  * @note Success - Existing string content is preserved.
  *
  * @note Failure - The string remains unmodified.
