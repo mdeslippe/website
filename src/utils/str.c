@@ -1,12 +1,13 @@
 #include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include "str.h"
 
 /**
  * @brief Asserts that a string is valid.
  *
- * This macro is intended for internal debug assertions to verify that a string 
+ * This macro is intended for internal debug assertions to verify that a string
  * satisfies all required invariants.
  *
  * A valid string must satisfy:
@@ -75,7 +76,7 @@ StringResult string_reserve(String* string, size_t capacity) {
     STRING_ASSERT_VALID(string);
 
     if (capacity <= string->capacity) {
-      return STRING_SUCCESS;
+        return STRING_SUCCESS;
     }
 
     size_t new_capacity = string->capacity;
@@ -97,6 +98,50 @@ StringResult string_reserve(String* string, size_t capacity) {
 
     string->data = data;
     string->capacity = new_capacity;
+
+    STRING_ASSERT_VALID(string);
+
+    return STRING_SUCCESS;
+
+}
+
+StringResult string_assign(String* string, const char* value, size_t length) {
+
+    if (string == NULL) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (value == NULL && length != 0) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (length == SIZE_MAX) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    STRING_ASSERT_VALID(string);
+
+    if (length == 0) {
+        string->length = 0;
+        string->data[0] = '\0';
+
+        STRING_ASSERT_VALID(string);
+
+        return STRING_SUCCESS;
+    }
+
+    // Aliased (substring) assignments cannot require growth, hence we do not 
+    // need to handle the buffer for value being reallocated.
+    StringResult result = string_reserve(string, length + 1);
+
+    if (result != STRING_SUCCESS) {
+        return result;
+    }
+
+    memmove(string->data, value, length);
+
+    string->length = length;
+    string->data[length] = '\0';
 
     STRING_ASSERT_VALID(string);
 
