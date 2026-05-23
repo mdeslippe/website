@@ -177,50 +177,28 @@ StringResult string_append(String* string, const char* value, size_t length) {
     size_t old_length = string->length;
     size_t required_capacity = old_length + length + 1;
 
-    if (string->capacity >= required_capacity) {
-        // If we do not need to expand the string's capacity, use memmove to
-        // move the value with buffer overlap support.
-        memmove(string->data + old_length, value, length);
-    } else {
-        // Check if 'value' overlaps with 'string->data' using integer address
-        // casting. If it does, we must copy it to a temporary buffer before 
-        // calling 'string_reserve' because reallocation may turn 'value' into a
-        // dangling pointer.
-        uintptr_t value_addr = (uintptr_t)value;
-        uintptr_t data_start = (uintptr_t)string->data;
+    uintptr_t value_addr = (uintptr_t)value;
+    uintptr_t data_start = (uintptr_t)string->data;
 
-        // Check if value resides anywhere inside the string's active allocation
-        // block [data_start, data_start + capacity).
-        bool is_overlapping = (value_addr >= data_start) &&
-            ((value_addr - data_start) < string->capacity);
+    bool is_overlapping = (value_addr >= data_start) &&
+        ((value_addr - data_start) < string->capacity);
 
-        const char* source_ptr = value;
-        char* copy = NULL;
-
-        if (is_overlapping) {
-            copy = malloc(length);
-            if (copy == NULL) {
-                return STRING_ERROR_ALLOCATION;
-            }
-            memcpy(copy, value, length);
-            source_ptr = copy;
-        }
-
-        StringResult result = string_reserve(string, required_capacity);
-
-        if (result != STRING_SUCCESS) {
-            if (is_overlapping) {
-                free(copy);
-            }
-            return result;
-        }
-
-        memcpy(string->data + old_length, source_ptr, length);
-
-        if (is_overlapping) {
-            free(copy);
-        }
+    size_t overlap_offset = 0;
+    if (is_overlapping) {
+        overlap_offset = (size_t)(value - string->data);
     }
+
+    StringResult result = string_reserve(string, required_capacity);
+    if (result != STRING_SUCCESS) {
+        return result;
+    }
+
+    const char* source_ptr = value;
+    if (is_overlapping) {
+        source_ptr = string->data + overlap_offset;
+    }
+
+    memmove(string->data + old_length, source_ptr, length);
 
     string->length = old_length + length;
     string->data[old_length + length] = '\0';
