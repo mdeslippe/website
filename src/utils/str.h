@@ -157,3 +157,33 @@ StringResult string_reserve(String* string, size_t capacity);
  * @return STRING_ERROR_ALLOCATION if memory allocation fails.
  */
 StringResult string_assign(String* string, const char* value, size_t length);
+
+/**
+ * @brief Appends the contents of the string with the first `length` bytes of
+ *        `value`.
+ * 
+ * Copies `length` bytes from `value` to the end of the string and appends a
+ * trailing null-terminator. If necessary, the string is reallocated to provide
+ * sufficient capacity for the appended bytes and the null-terminator.
+ * 
+ * The source bytes may overlap the destination buffer, including regions within
+ * the string itself.
+ * 
+ * @pre `string` must be initialized with `string_init`.
+ * 
+ * @note Success - The bytes are appended to the existing contents.
+ * 
+ * @note Failure - The string remains unmodified.
+ * 
+ * @param string Pointer to the initialized string.
+ * @param value Pointer to the source bytes to append. May be NULL if
+ *              `length == 0`.
+ * @param length Number of bytes to append.
+ * 
+ * @return STRING_SUCCESS on success.
+ * @return STRING_ERROR_ARGUMENT if `string` is NULL,
+ *         or if `value` is NULL and `length != 0`,
+ *         or if the required capacity cannot be represented.
+ * @return STRING_ERROR_ALLOCATION if memory allocation fails.
+ */
+StringResult string_append(String* string, const char* value, size_t length);
