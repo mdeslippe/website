@@ -129,11 +129,11 @@ StringResult string_free(String* string);
 StringResult string_reserve(String* string, size_t capacity);
 
 /**
- * @brief Replaces the contents of a string with the first `length` bytes of 
+ * @brief Replaces the contents of a string with the first `length` bytes of
  *        `value`.
  *
- * Copies `length` bytes from `value` into the string and appends a trailing 
- * null-terminator. If necessary, the string is reallocated to provide 
+ * Copies `length` bytes from `value` into the string and appends a trailing
+ * null-terminator. If necessary, the string is reallocated to provide
  * sufficient capacity for the assigned bytes and the null-terminator.
  *
  * The source bytes may overlap the destination buffer, including regions within
@@ -146,7 +146,7 @@ StringResult string_reserve(String* string, size_t capacity);
  * @note Failure - The string remains unmodified.
  *
  * @param string Pointer to the initialized string.
- * @param value Pointer to the source bytes to assign. May be NULL if 
+ * @param value Pointer to the source bytes to assign. May be NULL if
  *              `length == 0`.
  * @param length Number of bytes to assign.
  *
