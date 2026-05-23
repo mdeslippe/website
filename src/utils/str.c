@@ -135,14 +135,15 @@ StringResult string_assign(String* string, const char* value, size_t length) {
         return STRING_SUCCESS;
     }
 
+    // Aliased (substring) assignments cannot require buffer growth, so we do 
+    // not need to handle reallocation of a potentially overlapping value when 
+    // calling string_reserve.
     StringResult result = string_reserve(string, length + 1);
 
     if (result != STRING_SUCCESS) {
         return result;
     }
 
-    // Aliased (substring) assignments cannot require growth, hence we do not 
-    // need to handle the buffer for value being reallocated.
     memmove(string->data, value, length);
 
     string->length = length;
