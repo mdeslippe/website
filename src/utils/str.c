@@ -69,7 +69,11 @@ StringResult string_free(String* string) {
 
 StringResult string_reserve(String* string, size_t capacity) {
 
-    if (string == NULL || capacity == 0) {
+    if (string == NULL) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (capacity == 0) {
         return STRING_ERROR_ARGUMENT;
     }
 
