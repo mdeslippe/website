@@ -184,13 +184,22 @@ StringResult string_assign(String* string, const char* value, size_t length) {
         return STRING_SUCCESS;
     }
 
-    // Aliased (substring) assignments cannot require buffer growth, so we do 
-    // not need to handle reallocation of a potentially overlapping value when 
-    // calling string_reserve.
+    size_t overlap_offset = 0;
+    bool is_overlapping = pointer_is_in_block(
+        value,
+        string->data,
+        string->capacity,
+        &overlap_offset
+    );
+
     StringResult result = string_reserve(string, length + 1);
 
     if (result != STRING_SUCCESS) {
         return result;
+    }
+
+    if (is_overlapping) {
+        value = string->data + overlap_offset;
     }
 
     memmove(string->data, value, length);
