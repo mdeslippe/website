@@ -357,3 +357,37 @@ StringResult string_insert(
     return STRING_SUCCESS;
 
 }
+
+StringResult string_remove(String* string, size_t index, size_t length) {
+
+    if (string == NULL) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (index > string->length) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (length > string->length - index) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    STRING_ASSERT_VALID(string);
+
+    if (length == 0) {
+        return STRING_SUCCESS;
+    }
+
+    memmove(
+        string->data + index, 
+        string->data + index + length,
+        string->length + 1 - index - length
+    );
+
+    string->length = string->length - length;
+
+    STRING_ASSERT_VALID(string);
+
+    return STRING_SUCCESS;
+
+}
