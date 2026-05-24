@@ -27,6 +27,55 @@
         (string)->data[(string)->length] == '\0' \
     )
 
+/**
+ * @brief Determines whether `pointer` lies within the memory block beginning at
+ * `block_start` and spanning `block_length` bytes.
+ *
+ * If `pointer` lies within the block, `offset` (if non-NULL) is set to the byte
+ * offset of `pointer` relative to `block_start`.
+ *
+ * The memory block is treated as the half-open interval:
+ * [block_start, block_start + block_length)
+ *
+ * @param pointer Pointer to test.
+ * @param block_start Start address of the memory block.
+ * @param block_length Size of the memory block in bytes.
+ * @param offset Optional output receiving the byte offset of `pointer` from
+ *               `block_start`.
+ *
+ * @return `true` if `pointer` lies within the block, otherwise `false`.
+ */
+static inline bool pointer_is_in_block(
+    const void* pointer,
+    const void* block_start,
+    size_t block_length,
+    size_t* offset
+) {
+
+    if (pointer == NULL || block_start == NULL) {
+        return false;
+    }
+
+    uintptr_t pointer_address = (uintptr_t)pointer;
+    uintptr_t start_address = (uintptr_t)block_start;
+
+    if (pointer_address < start_address) {
+        return false;
+    }
+
+    size_t difference = pointer_address - start_address;
+
+    if (difference >= block_length) {
+        return false;
+    }
+
+    if (offset != NULL) {
+        *offset = difference;
+    }
+
+    return true;
+}
+
 StringResult string_init(String* string) {
 
     if (string == NULL) {
