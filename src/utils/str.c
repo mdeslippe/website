@@ -240,13 +240,11 @@ StringResult string_append(String* string, const char* value, size_t length) {
         return result;
     }
 
-    const char* source_ptr = value;
-
     if (is_overlapping) {
-        source_ptr = string->data + overlap_offset;
+        value = string->data + overlap_offset;
     }
 
-    memmove(string->data + old_length, source_ptr, length);
+    memmove(string->data + old_length, value, length);
 
     string->length = old_length + length;
     string->data[old_length + length] = '\0';
