@@ -224,3 +224,24 @@ StringResult string_insert(
     const char* value,
     size_t length
 );
+
+/**
+ * @brief Removes `length` bytes from the string starting at `index`.
+ *
+ * All existing content after the removed segment will be shifted to the left.
+ *
+ * @pre `string` must be initialized with `string_init`.
+ *
+ * @note Success - The bytes are removed from the existing contents.
+ *
+ * @note Failure - The string remains unmodified.
+ *
+ * @param string Pointer to the initialized string.
+ * @param index Index at which to begin removing bytes.
+ * @param length Number of bytes to remove.
+ *
+ * @return STRING_SUCCESS on success.
+ * @return STRING_ERROR_ARGUMENT if `string` is NULL,
+ *         or if `index + length > string->length`.
+ */
+StringResult string_remove(String* string, size_t index, size_t length);
