@@ -263,3 +263,97 @@ StringResult string_append(String* string, const char* value, size_t length) {
     return STRING_SUCCESS;
 
 }
+
+StringResult string_insert(
+    String* string,
+    size_t index,
+    const char* value,
+    size_t length
+) {
+
+    if (string == NULL) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (index > string->length) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (value == NULL && length != 0) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (length > SIZE_MAX - string->length - 1) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    STRING_ASSERT_VALID(string);
+
+    if (length == 0) {
+        return STRING_SUCCESS;
+    }
+
+    size_t old_length = string->length;
+    size_t required_capacity = old_length + length + 1;
+    size_t overlap_offset = 0;
+    bool is_overlapping = pointer_is_in_block(
+        value,
+        string->data,
+        string->capacity,
+        &overlap_offset
+    );
+
+    StringResult result = string_reserve(string, required_capacity);
+
+    if (result != STRING_SUCCESS) {
+        return result;
+    }
+
+    if (is_overlapping) {
+        value = string->data + overlap_offset;
+    }
+
+    // Shift existing contents, including the null terminator (+1), to the right
+    // to make room for the value being inserted.
+    memmove(
+        string->data + index + length,
+        string->data + index,
+        old_length - index + 1
+    );
+
+    // Insert content depending on if and where overlap occurs.
+    if (!is_overlapping) {
+        // Source does not overlap.
+        memmove(string->data + index, value, length);
+    } else if (overlap_offset >= index) {
+        // Source is entirely to the right of the insertion point.
+        // We need to shift it forward.
+        memmove(string->data + index, value + length, length);
+    } else if (overlap_offset + length <= index) {
+        // Source is entirely to the left of the insertion point.
+        // It did not move.
+        memmove(string->data + index, value, length);
+    } else {
+        // Source straddles the insertion point and has been torn in half.
+        size_t left_length = index - overlap_offset;
+        size_t right_length = length - left_length;
+
+        // Copy the unmoved left half into the start of the gap.
+        memmove(string->data + index, value, left_length);
+
+        // Copy the shifted right half into the remainder of the gap.
+        memmove(
+            string->data + index + left_length,
+            value + left_length + length,
+            right_length
+        );
+    }
+
+    string->length = old_length + length;
+    string->data[old_length + length] = '\0';
+
+    STRING_ASSERT_VALID(string);
+
+    return STRING_SUCCESS;
+
+}
