@@ -227,13 +227,14 @@ StringResult string_append(String* string, const char* value, size_t length) {
     size_t old_length = string->length;
     size_t required_capacity = old_length + length + 1;
 
-    uintptr_t value_addr = (uintptr_t)value;
-    uintptr_t data_start = (uintptr_t)string->data;
-
-    bool is_overlapping = (value_addr >= data_start) &&
-        ((value_addr - data_start) < string->capacity);
-
     size_t overlap_offset = 0;
+    bool is_overlapping = pointer_is_in_block(
+        value,
+        string->data,
+        string->capacity,
+        &overlap_offset
+    );
+
     if (is_overlapping) {
         overlap_offset = (size_t)(value - string->data);
     }
