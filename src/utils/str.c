@@ -226,7 +226,6 @@ StringResult string_append(String* string, const char* value, size_t length) {
 
     size_t old_length = string->length;
     size_t required_capacity = old_length + length + 1;
-
     size_t overlap_offset = 0;
     bool is_overlapping = pointer_is_in_block(
         value,
@@ -235,16 +234,14 @@ StringResult string_append(String* string, const char* value, size_t length) {
         &overlap_offset
     );
 
-    if (is_overlapping) {
-        overlap_offset = (size_t)(value - string->data);
-    }
-
     StringResult result = string_reserve(string, required_capacity);
+
     if (result != STRING_SUCCESS) {
         return result;
     }
 
     const char* source_ptr = value;
+
     if (is_overlapping) {
         source_ptr = string->data + overlap_offset;
     }
