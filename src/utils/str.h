@@ -261,13 +261,13 @@ StringResult string_remove(String* string, size_t index, size_t length);
  *
  * If `length` is zero, the search succeeds immediately and `index` is set to
  * `start_index`.
- * 
+ *
  * @pre `string` must be initialized with `string_init`.
  *
  * @note Success - The index of the first match is written to `index`.
  *
  * @note Failure - The value of `index` remains unmodified.
- * 
+ *
  * @param string Pointer to the initialized string to search.
  * @param start_index Index at which to begin searching. Must be less than or
  *                    equal to the current string length.
@@ -284,8 +284,8 @@ StringResult string_remove(String* string, size_t index, size_t length);
  *         or if `value` is NULL and `length != 0`.
  */
 StringResult string_find(
-    const String* string, 
-    size_t start_index, 
+    const String* string,
+    size_t start_index,
     const char* value,
     size_t length,
     size_t* index

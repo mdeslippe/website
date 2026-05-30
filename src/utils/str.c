@@ -380,7 +380,7 @@ StringResult string_remove(String* string, size_t index, size_t length) {
     }
 
     memmove(
-        string->data + index, 
+        string->data + index,
         string->data + index + length,
         string->length + 1 - index - length
     );
@@ -394,8 +394,8 @@ StringResult string_remove(String* string, size_t index, size_t length) {
 }
 
 StringResult string_find(
-    const String* string, 
-    size_t start_index, 
+    const String* string,
+    size_t start_index,
     const char* value,
     size_t length,
     size_t* index
@@ -434,7 +434,7 @@ StringResult string_find(
     }
 
     *index = match - string->data;
-    
+
     STRING_ASSERT_VALID(string);
 
     return STRING_SUCCESS;
@@ -472,9 +472,9 @@ StringResult string_replace_first(
     size_t found_index = 0;
 
     StringResult find_result = string_find(
-        string, 
-        start_index, 
-        target, 
+        string,
+        start_index,
+        target,
         target_length,
         &found_index
     );
@@ -500,8 +500,8 @@ StringResult string_replace_first(
     // after the inserted replacement, cannot fail because the target bytes are
     // guaranteed to still exist at this position.
     StringResult remove_result = string_remove(
-        string, 
-        found_index + replacement_length, 
+        string,
+        found_index + replacement_length,
         target_length
     );
 
