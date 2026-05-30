@@ -9,11 +9,12 @@
  * @brief Result codes returned by String operations.
  *
  * Defines the possible outcomes of functions operating on the String type.
- * Functions that can fail should return one of these values to indicate
- * success or the type of failure.
+ * Functions return one of these values to indicate success, a non-success
+ * condition such as a value not being found, or the type of failure.
  *
  * @note Usage - A return value of STRING_SUCCESS indicates success. Any other
- *               value indicates an error.
+ *               value indicates a non-success condition, which may be a normal
+ *               outcome (such as STRING_NOT_FOUND) or an error.
  */
 typedef enum {
     /**
@@ -22,14 +23,19 @@ typedef enum {
     STRING_SUCCESS = 0,
 
     /**
+     * Target value was not found.
+     */
+    STRING_NOT_FOUND = 1,
+
+    /**
      * Invalid argument was provided.
      */
-    STRING_ERROR_ARGUMENT = 1,
+    STRING_ERROR_ARGUMENT = 2,
 
     /**
      * Memory allocation failed.
      */
-    STRING_ERROR_ALLOCATION = 2
+    STRING_ERROR_ALLOCATION = 3
 } StringResult;
 
 /**
