@@ -435,6 +435,8 @@ StringResult string_find(
 
     *index = match - string->data;
     
+    STRING_ASSERT_VALID(string);
+
     return STRING_SUCCESS;
 
 }
