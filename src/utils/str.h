@@ -187,3 +187,61 @@ StringResult string_assign(String* string, const char* value, size_t length);
  * @return STRING_ERROR_ALLOCATION if memory allocation fails.
  */
 StringResult string_append(String* string, const char* value, size_t length);
+
+/**
+ * @brief Inserts the first `length` bytes of `value` into the string starting
+ *        at `index`.
+ *
+ * All existing content at and after `index` will be shifted to the right to
+ * accommodate the inserted bytes.
+ *
+ * The source bytes may overlap the destination buffer, including regions within
+ * the string itself.
+ *
+ * @pre `string` must be initialized with `string_init`.
+ *
+ * @note Success - The bytes are inserted into the existing contents.
+ *
+ * @note Failure - The string remains unmodified.
+ *
+ * @param string Pointer to the initialized string.
+ * @param index Index at which to begin inserting bytes. Must be less than or
+ *              equal to the current string length.
+ * @param value Pointer to the source bytes to insert. May be NULL if
+ *              `length == 0`.
+ * @param length Number of bytes to insert.
+ *
+ * @return STRING_SUCCESS on success.
+ * @return STRING_ERROR_ARGUMENT if `string` is NULL,
+ *         or if `index > string->length`,
+ *         or if `value` is NULL and `length != 0`,
+ *         or if the required capacity cannot be represented.
+ * @return STRING_ERROR_ALLOCATION if memory allocation fails.
+ */
+StringResult string_insert(
+    String* string,
+    size_t index,
+    const char* value,
+    size_t length
+);
+
+/**
+ * @brief Removes `length` bytes from the string starting at `index`.
+ *
+ * All existing content after the removed segment will be shifted to the left.
+ *
+ * @pre `string` must be initialized with `string_init`.
+ *
+ * @note Success - The bytes are removed from the existing contents.
+ *
+ * @note Failure - The string remains unmodified.
+ *
+ * @param string Pointer to the initialized string.
+ * @param index Index at which to begin removing bytes.
+ * @param length Number of bytes to remove.
+ *
+ * @return STRING_SUCCESS on success.
+ * @return STRING_ERROR_ARGUMENT if `string` is NULL,
+ *         or if `index + length > string->length`.
+ */
+StringResult string_remove(String* string, size_t index, size_t length);
