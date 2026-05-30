@@ -440,3 +440,83 @@ StringResult string_find(
     return STRING_SUCCESS;
 
 }
+
+StringResult string_replace_first(
+    String* string,
+    size_t start_index,
+    const char* target,
+    size_t target_length,
+    const char* replacement,
+    size_t replacement_length,
+    size_t* match_index
+) {
+
+    if (string == NULL) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (start_index > string->length) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (target == NULL && target_length != 0) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (replacement == NULL && replacement_length != 0) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    STRING_ASSERT_VALID(string);
+
+    size_t found_index = 0;
+
+    StringResult find_result = string_find(
+        string, 
+        start_index, 
+        target, 
+        target_length,
+        &found_index
+    );
+
+    if (find_result != STRING_SUCCESS) {
+        return find_result;
+    }
+
+    // We need to insert before we delete. If there is overlap, the content that
+    // we are deleting may actually be the content we need to insert.
+    StringResult insert_result = string_insert(
+        string,
+        found_index,
+        replacement,
+        replacement_length
+    );
+
+    if (insert_result != STRING_SUCCESS) {
+        return insert_result;
+    }
+
+    // Removing the original target substring, which now starts immediately 
+    // after the inserted replacement, cannot fail because the target bytes are
+    // guaranteed to still exist at this position.
+    StringResult remove_result = string_remove(
+        string, 
+        found_index + replacement_length, 
+        target_length
+    );
+
+    // If for some reason the remove did fail, the application is in an unknown
+    // state and we cannot safely continue.
+    if (remove_result != STRING_SUCCESS) {
+        abort();
+    }
+
+    if (match_index != NULL) {
+        *match_index = found_index;
+    }
+
+    STRING_ASSERT_VALID(string);
+
+    return STRING_SUCCESS;
+
+}
