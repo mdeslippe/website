@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "str.h"
+#include "musl/memmem.h"
 
 /**
  * @brief Asserts that a string is valid.
@@ -388,6 +389,52 @@ StringResult string_remove(String* string, size_t index, size_t length) {
 
     STRING_ASSERT_VALID(string);
 
+    return STRING_SUCCESS;
+
+}
+
+StringResult string_find(
+    const String* string, 
+    size_t start_index, 
+    const char* value,
+    size_t length,
+    size_t* index
+) {
+
+    if (string == NULL) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (index == NULL) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (start_index > string->length) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (value == NULL && length != 0) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    STRING_ASSERT_VALID(string);
+
+    if (length == 0) {
+        *index = start_index;
+        return STRING_SUCCESS;
+    }
+
+    const char* haystack = string->data + start_index;
+    size_t haystack_length = string->length - start_index;
+
+    const char* match = memmem(haystack, haystack_length, value, length);
+
+    if (match == NULL) {
+        return STRING_NOT_FOUND;
+    }
+
+    *index = match - string->data;
+    
     return STRING_SUCCESS;
 
 }
