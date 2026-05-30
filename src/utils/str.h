@@ -251,3 +251,42 @@ StringResult string_insert(
  *         or if `index + length > string->length`.
  */
 StringResult string_remove(String* string, size_t index, size_t length);
+
+/**
+ * @brief Searches for the first occurrence of a substring within a string.
+ *
+ * Searches the string starting at `start_index` for the first occurrence of
+ * the substring specified by `value` and `length`. If found, the index of the
+ * match is written to `index`.
+ *
+ * If `length` is zero, the search succeeds immediately and `index` is set to
+ * `start_index`.
+ * 
+ * @pre `string` must be initialized with `string_init`.
+ *
+ * @note Success - The index of the first match is written to `index`.
+ *
+ * @note Failure - The value of `index` remains unmodified.
+ * 
+ * @param string Pointer to the initialized string to search.
+ * @param start_index Index at which to begin searching. Must be less than or
+ *                    equal to the current string length.
+ * @param value Pointer to the substring to search for. May be NULL if
+ *              `length == 0`.
+ * @param length Length of the substring to search for.
+ * @param index Pointer to receive the index of the first match.
+ *
+ * @return STRING_SUCCESS if the substring is found.
+ * @return STRING_NOT_FOUND if the substring is not found.
+ * @return STRING_ERROR_ARGUMENT if `string` is NULL,
+ *         or if `index` is NULL,
+ *         or if `start_index > string->length`,
+ *         or if `value` is NULL and `length != 0`.
+ */
+StringResult string_find(
+    const String* string, 
+    size_t start_index, 
+    const char* value,
+    size_t length,
+    size_t* index
+);
