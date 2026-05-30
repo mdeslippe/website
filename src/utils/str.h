@@ -206,9 +206,9 @@ StringResult string_append(String* string, const char* value, size_t length);
  *
  * @param string Pointer to the initialized string.
  * @param index Index at which to begin inserting bytes. Must be less than or
- *               equal to the current string length.
+ *              equal to the current string length.
  * @param value Pointer to the source bytes to insert. May be NULL if
- *               `length == 0`.
+ *              `length == 0`.
  * @param length Number of bytes to insert.
  *
  * @return STRING_SUCCESS on success.
