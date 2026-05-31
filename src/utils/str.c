@@ -560,35 +560,39 @@ StringResult string_replace_all(
 
     size_t target_offset = 0;
     bool target_overlaps = pointer_is_in_block(
-        target, 
-        string->data, 
-        string->capacity, 
+        target,
+        string->data,
+        string->capacity,
         &target_offset
     );
 
     if (target_overlaps) {
         target_copy = malloc(target_length);
+
         if (target_copy == NULL) {
             return STRING_ERROR_ALLOCATION;
         }
+
         memcpy(target_copy, target, target_length);
         target = target_copy;
     }
 
     size_t replacement_offset = 0;
     bool replacement_overlaps = pointer_is_in_block(
-        replacement, 
-        string->data, 
-        string->capacity, 
+        replacement,
+        string->data,
+        string->capacity,
         &replacement_offset
     );
 
     if (replacement_length > 0 && replacement_overlaps) {
         replacement_copy = malloc(replacement_length);
+
         if (replacement_copy == NULL) {
             free(target_copy);
             return STRING_ERROR_ALLOCATION;
         }
+
         memcpy(replacement_copy, replacement, replacement_length);
         replacement = replacement_copy;
     }
@@ -625,19 +629,23 @@ StringResult string_replace_all(
 
     if (replacement_length > target_length) {
         size_t growth_per_match = replacement_length - target_length;
+
         if (growth_per_match > (SIZE_MAX - old_length - 1) / count) {
             free(target_copy);
             free(replacement_copy);
             return STRING_ERROR_ARGUMENT;
         }
+
         new_length = old_length + count * growth_per_match;
-    } else {
+    }
+    else {
         size_t shrink_per_match = target_length - replacement_length;
         new_length = old_length - count * shrink_per_match;
     }
 
     // Allocate new buffer.
     char* new_data = malloc(new_length + 1);
+
     if (new_data == NULL) {
         free(target_copy);
         free(replacement_copy);
@@ -672,8 +680,8 @@ StringResult string_replace_all(
         size_t segment_length = match_index - search_pos;
         if (segment_length > 0) {
             memcpy(
-                new_data + dst_pos, 
-                string->data + search_pos, 
+                new_data + dst_pos,
+                string->data + search_pos,
                 segment_length
             );
 
@@ -683,11 +691,11 @@ StringResult string_replace_all(
         // Copy replacement.
         if (replacement_length > 0) {
             memcpy(
-                new_data + dst_pos, 
-                replacement, 
+                new_data + dst_pos,
+                replacement,
                 replacement_length
             );
-            
+
             dst_pos += replacement_length;
         }
 
@@ -696,6 +704,7 @@ StringResult string_replace_all(
 
     // Copy remaining content after last match.
     size_t remaining = old_length - search_pos;
+
     if (remaining > 0) {
         memcpy(new_data + dst_pos, string->data + search_pos, remaining);
         dst_pos += remaining;
