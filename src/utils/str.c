@@ -398,14 +398,14 @@ StringResult string_find(
     size_t start_index,
     const char* value,
     size_t length,
-    size_t* index
+    size_t* match_index
 ) {
 
     if (string == NULL) {
         return STRING_ERROR_ARGUMENT;
     }
 
-    if (index == NULL) {
+    if (match_index == NULL) {
         return STRING_ERROR_ARGUMENT;
     }
 
@@ -420,7 +420,7 @@ StringResult string_find(
     STRING_ASSERT_VALID(string);
 
     if (length == 0) {
-        *index = start_index;
+        *match_index = start_index;
         return STRING_SUCCESS;
     }
 
@@ -433,7 +433,7 @@ StringResult string_find(
         return STRING_NOT_FOUND;
     }
 
-    *index = match - string->data;
+    *match_index = match - string->data;
 
     STRING_ASSERT_VALID(string);
 
