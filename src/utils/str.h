@@ -9,11 +9,12 @@
  * @brief Result codes returned by String operations.
  *
  * Defines the possible outcomes of functions operating on the String type.
- * Functions that can fail should return one of these values to indicate
- * success or the type of failure.
+ * Functions return one of these values to indicate success, a non-success
+ * condition such as a value not being found, or the type of failure.
  *
  * @note Usage - A return value of STRING_SUCCESS indicates success. Any other
- *               value indicates an error.
+ *               value indicates a non-success condition, which may be a normal
+ *               outcome (such as STRING_NOT_FOUND) or an error.
  */
 typedef enum {
     /**
@@ -22,14 +23,19 @@ typedef enum {
     STRING_SUCCESS = 0,
 
     /**
+     * Target value was not found.
+     */
+    STRING_NOT_FOUND = 1,
+
+    /**
      * Invalid argument was provided.
      */
-    STRING_ERROR_ARGUMENT = 1,
+    STRING_ERROR_ARGUMENT = 2,
 
     /**
      * Memory allocation failed.
      */
-    STRING_ERROR_ALLOCATION = 2
+    STRING_ERROR_ALLOCATION = 3
 } StringResult;
 
 /**
@@ -245,3 +251,94 @@ StringResult string_insert(
  *         or if `index + length > string->length`.
  */
 StringResult string_remove(String* string, size_t index, size_t length);
+
+/**
+ * @brief Searches for the first occurrence of a substring within a string.
+ *
+ * Searches the string starting at `start_index` for the first occurrence of
+ * the substring specified by `value` and `length`. If found, the index of the
+ * match is written to `match_index`.
+ *
+ * If `length` is zero, the search succeeds immediately and `match_index` is set
+ * to `start_index`.
+ *
+ * @pre `string` must be initialized with `string_init`.
+ *
+ * @note Success - The index of the first match is written to `match_index`.
+ *
+ * @note Failure - The value of `match_index` remains unmodified.
+ *
+ * @param string Pointer to the initialized string to search.
+ * @param start_index Index at which to begin searching. Must be less than or
+ *                    equal to the current string length.
+ * @param value Pointer to the substring to search for. May be NULL if
+ *              `length == 0`.
+ * @param length Length of the substring to search for.
+ * @param match_index Pointer to receive the index of the first match.
+ *
+ * @return STRING_SUCCESS if the substring is found.
+ * @return STRING_NOT_FOUND if the substring is not found.
+ * @return STRING_ERROR_ARGUMENT if `string` is NULL,
+ *         or if `match_index` is NULL,
+ *         or if `start_index > string->length`,
+ *         or if `value` is NULL and `length != 0`.
+ */
+StringResult string_find(
+    const String* string,
+    size_t start_index,
+    const char* value,
+    size_t length,
+    size_t* match_index
+);
+
+/**
+ * @brief Replaces the first occurrence of a substring within a string.
+ *
+ * Searches the string starting at `start_index` for the first occurrence of the
+ * substring specified by `target` and `target_length`. If found, the matched
+ * substring is replaced with the contents specified by `replacement` and
+ * `replacement_length`.
+ *
+ * If `target_length` is zero, the `replacement` will be inserted at
+ * `start_index` and `match_index` will be set to `start_index`.
+ *
+ * The target and replacement content may overlap the destination buffer,
+ * including regions within the string itself.
+ *
+ * @pre `string` must be initialized with `string_init`.
+ *
+ * @note Success - The first matching substring is replaced and the index of
+ *                 the match is written to `match_index` (if not NULL).
+ *
+ * @note Failure - The string and the value of `match_index` remain unmodified.
+ *
+ * @param string Pointer to the initialized string.
+ * @param start_index Index at which to begin searching. Must be less than or
+ *                    equal to the current string length.
+ * @param target Pointer to the substring to search for. May be NULL if
+ *               `target_length == 0`.
+ * @param target_length Length of the substring to search for.
+ * @param replacement Pointer to the replacement content. May be NULL if
+ *                    `replacement_length == 0`.
+ * @param replacement_length Length of the replacement content.
+ * @param match_index Pointer to receive the index of the match. May be NULL if
+ *                    the match index is not needed.
+ *
+ * @return STRING_SUCCESS if the substring is found and replaced.
+ * @return STRING_NOT_FOUND if the substring is not found.
+ * @return STRING_ERROR_ARGUMENT if `string` is NULL,
+ *         or if `start_index > string->length`,
+ *         or if `target` is NULL and `target_length != 0`,
+ *         or if `replacement` is NULL and `replacement_length != 0`,
+ *         or if the required capacity cannot be represented.
+ * @return STRING_ERROR_ALLOCATION if memory allocation fails.
+ */
+StringResult string_replace_first(
+    String* string,
+    size_t start_index,
+    const char* target,
+    size_t target_length,
+    const char* replacement,
+    size_t replacement_length,
+    size_t* match_index
+);

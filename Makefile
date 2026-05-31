@@ -23,7 +23,7 @@ else
     $(error Unknown toolchain: $(TOOLCHAIN))
 endif
 
-CPPFLAGS := -Iinclude
+CPPFLAGS := -Iinclude -Ivendor
 CFLAGS := -std=c23 -Wall -Wextra -pedantic -MMD -MP
 LDFLAGS :=
 LDLIBS :=
