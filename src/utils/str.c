@@ -671,13 +671,23 @@ StringResult string_replace_all(
         // Copy segment before this match (from search_pos to match_index).
         size_t segment_length = match_index - search_pos;
         if (segment_length > 0) {
-            memcpy(new_data + dst_pos, string->data + search_pos, segment_length);
+            memcpy(
+                new_data + dst_pos, 
+                string->data + search_pos, 
+                segment_length
+            );
+
             dst_pos += segment_length;
         }
 
         // Copy replacement.
         if (replacement_length > 0) {
-            memcpy(new_data + dst_pos, replacement, replacement_length);
+            memcpy(
+                new_data + dst_pos, 
+                replacement, 
+                replacement_length
+            );
+            
             dst_pos += replacement_length;
         }
 
