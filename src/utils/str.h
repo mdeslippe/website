@@ -380,8 +380,7 @@ StringResult string_replace_first(
  * @return STRING_NOT_FOUND if the substring is not found.
  * @return STRING_ERROR_ARGUMENT if `string` is NULL,
  *         or if `start_index > string->length`,
- *         or if `target` is NULL,
- *         or if `target_length == 0`,
+ *         or if `target` is NULL or `target_length == 0`,
  *         or if `replacement` is NULL and `replacement_length != 0`,
  *         or if the required capacity cannot be represented.
  * @return STRING_ERROR_ALLOCATION if memory allocation fails.
