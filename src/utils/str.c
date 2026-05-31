@@ -553,8 +553,9 @@ StringResult string_replace_all(
         return STRING_NOT_FOUND;
     }
 
-    // Copy target and replacement if they overlap the string buffer, since
-    // reallocation may invalidate them.
+    // We need to copy the target and replacement values if they overlap with
+    // the string's data buffer. As we replace values, there is a chance that
+    // we modify them.
     char* target_copy = NULL;
     char* replacement_copy = NULL;
 
@@ -597,7 +598,8 @@ StringResult string_replace_all(
         replacement = replacement_copy;
     }
 
-    // First pass: count matches.
+    // We need to count the number of matches to determine the buffer size to
+    // allocate for the construction of the new string.
     size_t count = 0;
     size_t read_index = start_index;
 
@@ -652,7 +654,7 @@ StringResult string_replace_all(
         return STRING_ERROR_ALLOCATION;
     }
 
-    // Second pass: build result.
+    // Now that we have the buffer, we can build the replaced string.
     size_t write_index = 0;
     read_index = start_index;
 
