@@ -599,12 +599,12 @@ StringResult string_replace_all(
 
     // First pass: count matches.
     size_t count = 0;
-    size_t search_pos = start_index;
+    size_t read_index = start_index;
 
-    while (search_pos <= string->length - target_length) {
+    while (read_index <= string->length - target_length) {
         const char* match = memmem(
-            string->data + search_pos,
-            string->length - search_pos,
+            string->data + read_index,
+            string->length - read_index,
             target,
             target_length
         );
@@ -614,7 +614,7 @@ StringResult string_replace_all(
         }
 
         count++;
-        search_pos = (match - string->data) + target_length;
+        read_index = (match - string->data) + target_length;
     }
 
     if (count == 0) {
@@ -653,19 +653,19 @@ StringResult string_replace_all(
     }
 
     // Second pass: build result.
-    size_t dst_pos = 0;
-    search_pos = start_index;
+    size_t write_index = 0;
+    read_index = start_index;
 
     // Copy prefix before start_index.
     if (start_index > 0) {
         memcpy(new_data, string->data, start_index);
-        dst_pos = start_index;
+        write_index = start_index;
     }
 
-    while (search_pos <= old_length - target_length) {
+    while (read_index <= old_length - target_length) {
         const char* match = memmem(
-            string->data + search_pos,
-            old_length - search_pos,
+            string->data + read_index,
+            old_length - read_index,
             target,
             target_length
         );
@@ -676,41 +676,41 @@ StringResult string_replace_all(
 
         size_t match_index = match - string->data;
 
-        // Copy segment before this match (from search_pos to match_index).
-        size_t segment_length = match_index - search_pos;
+        // Copy segment before this match (from read_index to match_index).
+        size_t segment_length = match_index - read_index;
         if (segment_length > 0) {
             memcpy(
-                new_data + dst_pos,
-                string->data + search_pos,
+                new_data + write_index,
+                string->data + read_index,
                 segment_length
             );
 
-            dst_pos += segment_length;
+            write_index += segment_length;
         }
 
         // Copy replacement.
         if (replacement_length > 0) {
             memcpy(
-                new_data + dst_pos,
+                new_data + write_index,
                 replacement,
                 replacement_length
             );
 
-            dst_pos += replacement_length;
+            write_index += replacement_length;
         }
 
-        search_pos = match_index + target_length;
+        read_index = match_index + target_length;
     }
 
     // Copy remaining content after last match.
-    size_t remaining = old_length - search_pos;
+    size_t remaining = old_length - read_index;
 
     if (remaining > 0) {
-        memcpy(new_data + dst_pos, string->data + search_pos, remaining);
-        dst_pos += remaining;
+        memcpy(new_data + write_index, string->data + read_index, remaining);
+        write_index += remaining;
     }
 
-    new_data[dst_pos] = '\0';
+    new_data[write_index] = '\0';
 
     // Assign the value.
     StringResult assign_result = string_assign(string, new_data, new_length);
