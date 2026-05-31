@@ -559,12 +559,11 @@ StringResult string_replace_all(
     char* target_copy = NULL;
     char* replacement_copy = NULL;
 
-    size_t target_offset = 0;
     bool target_overlaps = pointer_is_in_block(
         target,
         string->data,
         string->capacity,
-        &target_offset
+        NULL
     );
 
     if (target_overlaps) {
@@ -578,12 +577,11 @@ StringResult string_replace_all(
         target = target_copy;
     }
 
-    size_t replacement_offset = 0;
     bool replacement_overlaps = pointer_is_in_block(
         replacement,
         string->data,
         string->capacity,
-        &replacement_offset
+        NULL
     );
 
     if (replacement_length > 0 && replacement_overlaps) {
