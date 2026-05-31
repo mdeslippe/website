@@ -559,7 +559,14 @@ StringResult string_replace_all(
     char* replacement_copy = NULL;
 
     size_t target_offset = 0;
-    if (pointer_is_in_block(target, string->data, string->capacity, &target_offset)) {
+    bool target_overlaps = pointer_is_in_block(
+        target, 
+        string->data, 
+        string->capacity, 
+        &target_offset
+    );
+
+    if (target_overlaps) {
         target_copy = malloc(target_length);
         if (target_copy == NULL) {
             return STRING_ERROR_ALLOCATION;
@@ -569,8 +576,14 @@ StringResult string_replace_all(
     }
 
     size_t replacement_offset = 0;
-    if (replacement_length > 0 &&
-        pointer_is_in_block(replacement, string->data, string->capacity, &replacement_offset)) {
+    bool replacement_overlaps = pointer_is_in_block(
+        replacement, 
+        string->data, 
+        string->capacity, 
+        &replacement_offset
+    );
+
+    if (replacement_length > 0 && replacement_overlaps) {
         replacement_copy = malloc(replacement_length);
         if (replacement_copy == NULL) {
             free(target_copy);
