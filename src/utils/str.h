@@ -300,7 +300,7 @@ StringResult string_find(
  * `replacement_length`.
  *
  * If `target_length` is zero, the `replacement` will be inserted at
- * `start_index` and `match_index` is set to `start_index`.
+ * `start_index` and `match_index` will be set to `start_index`.
  *
  * The target and replacement content may overlap the destination buffer,
  * including regions within the string itself.
