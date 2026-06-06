@@ -1,3 +1,6 @@
+#ifndef STR_H
+#define STR_H
+
 #include <stddef.h>
 
 /**
@@ -394,3 +397,5 @@ StringResult string_replace_all(
     size_t replacement_length,
     size_t* matches_found
 );
+
+#endif
