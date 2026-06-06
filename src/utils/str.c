@@ -520,3 +520,214 @@ StringResult string_replace_first(
     return STRING_SUCCESS;
 
 }
+
+StringResult string_replace_all(
+    String* string,
+    size_t start_index,
+    const char* target,
+    size_t target_length,
+    const char* replacement,
+    size_t replacement_length,
+    size_t* matches_found
+) {
+
+    if (string == NULL) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (start_index > string->length) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (target == NULL || target_length == 0) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    if (replacement == NULL && replacement_length != 0) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    STRING_ASSERT_VALID(string);
+
+    if (target_length > string->length - start_index) {
+        return STRING_NOT_FOUND;
+    }
+
+    // We need to copy the target and replacement values if they overlap with
+    // the string's data buffer. As we replace values, there is a chance that
+    // we modify them.
+    char* target_copy = NULL;
+    char* replacement_copy = NULL;
+
+    bool target_overlaps = pointer_is_in_block(
+        target,
+        string->data,
+        string->capacity,
+        NULL
+    );
+
+    if (target_overlaps) {
+        target_copy = malloc(target_length);
+
+        if (target_copy == NULL) {
+            return STRING_ERROR_ALLOCATION;
+        }
+
+        memcpy(target_copy, target, target_length);
+        target = target_copy;
+    }
+
+    bool replacement_overlaps = pointer_is_in_block(
+        replacement,
+        string->data,
+        string->capacity,
+        NULL
+    );
+
+    if (replacement_length > 0 && replacement_overlaps) {
+        replacement_copy = malloc(replacement_length);
+
+        if (replacement_copy == NULL) {
+            free(target_copy);
+            return STRING_ERROR_ALLOCATION;
+        }
+
+        memcpy(replacement_copy, replacement, replacement_length);
+        replacement = replacement_copy;
+    }
+
+    // We need to count the number of matches to determine the buffer size to
+    // allocate for the construction of the new string.
+    size_t count = 0;
+    size_t read_index = start_index;
+
+    while (read_index <= string->length - target_length) {
+        const char* match = memmem(
+            string->data + read_index,
+            string->length - read_index,
+            target,
+            target_length
+        );
+
+        if (match == NULL) {
+            break;
+        }
+
+        count++;
+        read_index = (match - string->data) + target_length;
+    }
+
+    if (count == 0) {
+        free(target_copy);
+        free(replacement_copy);
+        return STRING_NOT_FOUND;
+    }
+
+    // Calculate new length.
+    size_t old_length = string->length;
+    size_t new_length;
+
+    if (replacement_length > target_length) {
+        size_t growth_per_match = replacement_length - target_length;
+
+        if (growth_per_match > (SIZE_MAX - old_length - 1) / count) {
+            free(target_copy);
+            free(replacement_copy);
+            return STRING_ERROR_ARGUMENT;
+        }
+
+        new_length = old_length + count * growth_per_match;
+    } else {
+        size_t shrink_per_match = target_length - replacement_length;
+        new_length = old_length - count * shrink_per_match;
+    }
+
+    // Allocate new buffer.
+    char* new_data = malloc(new_length + 1);
+
+    if (new_data == NULL) {
+        free(target_copy);
+        free(replacement_copy);
+        return STRING_ERROR_ALLOCATION;
+    }
+
+    // Now that we have the buffer, we can build the replaced string.
+    size_t write_index = 0;
+    read_index = start_index;
+
+    // Copy prefix before start_index.
+    if (start_index > 0) {
+        memcpy(new_data, string->data, start_index);
+        write_index = start_index;
+    }
+
+    while (read_index <= old_length - target_length) {
+        const char* match = memmem(
+            string->data + read_index,
+            old_length - read_index,
+            target,
+            target_length
+        );
+
+        if (match == NULL) {
+            break;
+        }
+
+        size_t match_index = match - string->data;
+
+        // Copy segment before this match (from read_index to match_index).
+        size_t segment_length = match_index - read_index;
+        if (segment_length > 0) {
+            memcpy(
+                new_data + write_index,
+                string->data + read_index,
+                segment_length
+            );
+
+            write_index += segment_length;
+        }
+
+        // Copy replacement.
+        if (replacement_length > 0) {
+            memcpy(
+                new_data + write_index,
+                replacement,
+                replacement_length
+            );
+
+            write_index += replacement_length;
+        }
+
+        read_index = match_index + target_length;
+    }
+
+    // Copy remaining content after last match.
+    size_t remaining = old_length - read_index;
+
+    if (remaining > 0) {
+        memcpy(new_data + write_index, string->data + read_index, remaining);
+        write_index += remaining;
+    }
+
+    new_data[write_index] = '\0';
+
+    // Assign the value.
+    StringResult assign_result = string_assign(string, new_data, new_length);
+
+    free(new_data);
+    free(target_copy);
+    free(replacement_copy);
+
+    if (assign_result != STRING_SUCCESS) {
+        return assign_result;
+    }
+
+    if (matches_found != NULL) {
+        *matches_found = count;
+    }
+
+    STRING_ASSERT_VALID(string);
+
+    return STRING_SUCCESS;
+
+}

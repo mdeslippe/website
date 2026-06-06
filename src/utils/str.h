@@ -342,3 +342,55 @@ StringResult string_replace_first(
     size_t replacement_length,
     size_t* match_index
 );
+
+/**
+ * @brief Replaces all occurrences of a substring within a string.
+ *
+ * Searches the string starting at `start_index` for any occurrence of the
+ * substring specified by `target` and `target_length`. If found, the matched
+ * substring(s) are replaced with the contents specified by `replacement` and
+ * `replacement_length`.
+ *
+ * Unlike `string_replace_first`, `target_length` cannot be zero; this would
+ * result in infinite matches.
+ *
+ * The target and replacement content may overlap the destination buffer,
+ * including regions within the string itself.
+ *
+ * @pre `string` must be initialized with `string_init`.
+ *
+ * @note Success - The matched substring(s) are replaced and the number of
+ *                 matches found is written to `matches_found` (if not NULL).
+ *
+ * @note Failure - The string and the value of `matches_found` remain
+ *                 unmodified.
+ *
+ * @param string Pointer to the initialized string.
+ * @param start_index Index at which to begin searching. Must be less than or
+ *                    equal to the current string length.
+ * @param target Pointer to the substring to search for.
+ * @param target_length Length of the substring to search for.
+ * @param replacement Pointer to the replacement content. May be NULL if
+ *                    `replacement_length == 0`.
+ * @param replacement_length Length of the replacement content.
+ * @param matches_found Pointer to receive the number of matches found. May be
+ *                      NULL if the number of matches found is not needed.
+ *
+ * @return STRING_SUCCESS if the substring is found and replaced at least once.
+ * @return STRING_NOT_FOUND if the substring is not found.
+ * @return STRING_ERROR_ARGUMENT if `string` is NULL,
+ *         or if `start_index > string->length`,
+ *         or if `target` is NULL or `target_length == 0`,
+ *         or if `replacement` is NULL and `replacement_length != 0`,
+ *         or if the required capacity cannot be represented.
+ * @return STRING_ERROR_ALLOCATION if memory allocation fails.
+ */
+StringResult string_replace_all(
+    String* string,
+    size_t start_index,
+    const char* target,
+    size_t target_length,
+    const char* replacement,
+    size_t replacement_length,
+    size_t* matches_found
+);
