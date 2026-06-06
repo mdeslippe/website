@@ -637,8 +637,7 @@ StringResult string_replace_all(
         }
 
         new_length = old_length + count * growth_per_match;
-    }
-    else {
+    } else {
         size_t shrink_per_match = target_length - replacement_length;
         new_length = old_length - count * shrink_per_match;
     }
