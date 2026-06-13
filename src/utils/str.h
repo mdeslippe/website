@@ -398,4 +398,88 @@ StringResult string_replace_all(
     size_t* matches_found
 );
 
+/**
+ * @brief Removes leading whitespace from a string.
+ *
+ * Removes all whitespace characters from the beginning of the string. The
+ * remaining content is shifted to the left. Whitespace characters are the
+ * space (` `), horizontal tab (`\t`), line feed (`\n`), vertical tab (`\v`),
+ * form feed (`\f`), and carriage return (`\r`) characters.
+ *
+ * @pre `string` must be initialized with `string_init`.
+ *
+ * @note Success - The leading whitespace, if any, is removed.
+ *
+ * @note Failure - The string remains unmodified.
+ *
+ * @note Encoding - Whitespace is matched at the byte level. The string is
+ *                  assumed to use an ASCII-compatible encoding (such as UTF-8
+ *                  or ISO-8859-*), where whitespace byte values never occur
+ *                  within a multi-byte sequence. Content in encodings that are
+ *                  not ASCII-compatible (such as UTF-16 or UTF-32) may be
+ *                  corrupted.
+ *
+ * @param string Pointer to the initialized string.
+ *
+ * @return STRING_SUCCESS on success.
+ * @return STRING_ERROR_ARGUMENT if `string` is NULL.
+ */
+StringResult string_trim_start(String* string);
+
+/**
+ * @brief Removes trailing whitespace from a string.
+ *
+ * Removes all whitespace characters from the end of the string. Whitespace
+ * characters are the space (` `), horizontal tab (`\t`), line feed (`\n`),
+ * vertical tab (`\v`), form feed (`\f`), and carriage return (`\r`)
+ * characters.
+ *
+ * @pre `string` must be initialized with `string_init`.
+ *
+ * @note Success - The trailing whitespace, if any, is removed.
+ *
+ * @note Failure - The string remains unmodified.
+ *
+ * @note Encoding - Whitespace is matched at the byte level. The string is
+ *                  assumed to use an ASCII-compatible encoding (such as UTF-8
+ *                  or ISO-8859-*), where whitespace byte values never occur
+ *                  within a multi-byte sequence. Content in encodings that are
+ *                  not ASCII-compatible (such as UTF-16 or UTF-32) may be
+ *                  corrupted.
+ *
+ * @param string Pointer to the initialized string.
+ *
+ * @return STRING_SUCCESS on success.
+ * @return STRING_ERROR_ARGUMENT if `string` is NULL.
+ */
+StringResult string_trim_end(String* string);
+
+/**
+ * @brief Removes leading and trailing whitespace from a string.
+ *
+ * Removes all whitespace characters from the beginning and the end of the
+ * string. The remaining content is shifted to the left. Whitespace characters
+ * are the space (` `), horizontal tab (`\t`), line feed (`\n`), vertical tab
+ * (`\v`), form feed (`\f`), and carriage return (`\r`) characters.
+ *
+ * @pre `string` must be initialized with `string_init`.
+ *
+ * @note Success - The leading and trailing whitespace, if any, is removed.
+ *
+ * @note Failure - The string remains unmodified.
+ *
+ * @note Encoding - Whitespace is matched at the byte level. The string is
+ *                  assumed to use an ASCII-compatible encoding (such as UTF-8
+ *                  or ISO-8859-*), where whitespace byte values never occur
+ *                  within a multi-byte sequence. Content in encodings that are
+ *                  not ASCII-compatible (such as UTF-16 or UTF-32) may be
+ *                  corrupted.
+ *
+ * @param string Pointer to the initialized string.
+ *
+ * @return STRING_SUCCESS on success.
+ * @return STRING_ERROR_ARGUMENT if `string` is NULL.
+ */
+StringResult string_trim(String* string);
+
 #endif
