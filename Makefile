@@ -32,6 +32,10 @@ ifeq ($(BUILD),release)
     CFLAGS += -O2 -DNDEBUG
 else
     CFLAGS += -O0 -g
+    ifeq ($(shell uname),Linux)
+        CFLAGS += -fsanitize=address,undefined,leak -fno-omit-frame-pointer
+        LDFLAGS += -fsanitize=address,undefined,leak
+    endif
 endif
 
 SRCS := $(shell find $(SRC_DIR) -name '*.c')
