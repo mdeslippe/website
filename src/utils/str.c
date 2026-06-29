@@ -77,6 +77,29 @@ static inline bool pointer_is_in_block(
     return true;
 }
 
+/**
+ * @brief Determines whether a character is a whitespace character or not.
+ *
+ * Whitespace characters are the space (` `), horizontal tab (`\t`), line feed
+ * (`\n`), vertical tab (`\v`), form feed (`\f`), and carriage return (`\r`)
+ * characters. This matches the standard "C" locale whitespace set without the
+ * locale dependence of `isspace`.
+ *
+ * @param character Character to test.
+ *
+ * @return `true` if the character is whitespace, otherwise `false`.
+ */
+static inline bool character_is_whitespace(char character) {
+    return (
+        character == ' '  ||
+        character == '\t' ||
+        character == '\n' ||
+        character == '\v' ||
+        character == '\f' ||
+        character == '\r'
+    );
+}
+
 StringResult string_init(String* string) {
 
     if (string == NULL) {
@@ -709,6 +732,9 @@ StringResult string_replace_all(
         write_index += remaining;
     }
 
+    // The counting pass and the build pass must agree on the final length.
+    assert(write_index == new_length);
+
     new_data[write_index] = '\0';
 
     // Assign the value.
@@ -725,6 +751,121 @@ StringResult string_replace_all(
     if (matches_found != NULL) {
         *matches_found = count;
     }
+
+    STRING_ASSERT_VALID(string);
+
+    return STRING_SUCCESS;
+
+}
+
+StringResult string_trim_start(String* string) {
+
+    if (string == NULL) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    STRING_ASSERT_VALID(string);
+
+    size_t prefix_length = 0;
+
+    while (
+        prefix_length < string->length &&
+        character_is_whitespace(string->data[prefix_length])
+    ) {
+        prefix_length++;
+    }
+
+    if (prefix_length == 0) {
+        return STRING_SUCCESS;
+    }
+
+    // Shift the content after the whitespace prefix, including the null 
+    // terminator (+1), to the start of the string.
+    memmove(
+        string->data,
+        string->data + prefix_length,
+        string->length - prefix_length + 1
+    );
+
+    string->length = string->length - prefix_length;
+
+    STRING_ASSERT_VALID(string);
+
+    return STRING_SUCCESS;
+
+}
+
+StringResult string_trim_end(String* string) {
+
+    if (string == NULL) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    STRING_ASSERT_VALID(string);
+
+    size_t new_length = string->length;
+
+    while (
+        new_length > 0 &&
+        character_is_whitespace(string->data[new_length - 1])
+    ) {
+        new_length--;
+    }
+
+    if (new_length == string->length) {
+        return STRING_SUCCESS;
+    }
+
+    string->length = new_length;
+    string->data[new_length] = '\0';
+
+    STRING_ASSERT_VALID(string);
+
+    return STRING_SUCCESS;
+
+}
+
+StringResult string_trim(String* string) {
+
+    if (string == NULL) {
+        return STRING_ERROR_ARGUMENT;
+    }
+
+    STRING_ASSERT_VALID(string);
+
+    // Find leading whitespace.
+    size_t start = 0;
+
+    while (
+        start < string->length &&
+        character_is_whitespace(string->data[start])
+    ) {
+        start++;
+    }
+
+    // Find trailing whitespace.
+    size_t end = string->length;
+    
+    while (
+        end > start &&
+        character_is_whitespace(string->data[end - 1])
+    ) {
+        end--;
+    }
+
+    size_t new_length = end - start;
+
+    if (new_length == string->length) {
+        return STRING_SUCCESS;
+    }
+
+    // Apply both trims in a single operation.
+    if (start > 0) {
+        memmove(string->data, string->data + start, new_length);
+    }
+
+    string->data[new_length] = '\0';
+    string->length = new_length;
 
     STRING_ASSERT_VALID(string);
 
