@@ -833,11 +833,39 @@ StringResult string_trim(String* string) {
 
     STRING_ASSERT_VALID(string);
 
-    StringResult trim_start_result = string_trim_start(string);
-    assert(trim_start_result == STRING_SUCCESS);
+    // Find leading whitespace.
+    size_t start = 0;
 
-    StringResult trim_end_result = string_trim_end(string);
-    assert(trim_end_result == STRING_SUCCESS);
+    while (
+        start < string->length &&
+        character_is_whitespace(string->data[start])
+    ) {
+        start++;
+    }
+
+    // Find trailing whitespace.
+    size_t end = string->length;
+    
+    while (
+        end > start &&
+        character_is_whitespace(string->data[end - 1])
+    ) {
+        end--;
+    }
+
+    size_t new_length = end - start;
+
+    if (new_length == string->length) {
+        return STRING_SUCCESS;
+    }
+
+    // Apply both trims in a single operation.
+    if (start > 0) {
+        memmove(string->data, string->data + start, new_length);
+    }
+
+    string->data[new_length] = '\0';
+    string->length = new_length;
 
     STRING_ASSERT_VALID(string);
 
