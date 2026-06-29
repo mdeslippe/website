@@ -89,7 +89,7 @@ static inline bool pointer_is_in_block(
  *
  * @return `true` if the character is whitespace, otherwise `false`.
  */
-static inline bool char_is_whitespace(char character) {
+static inline bool character_is_whitespace(char character) {
     return (
         character == ' '  ||
         character == '\t' ||
@@ -770,7 +770,7 @@ StringResult string_trim_start(String* string) {
 
     while (
         prefix_length < string->length &&
-        char_is_whitespace(string->data[prefix_length])
+        character_is_whitespace(string->data[prefix_length])
     ) {
         prefix_length++;
     }
@@ -807,7 +807,7 @@ StringResult string_trim_end(String* string) {
 
     while (
         new_length > 0 &&
-        char_is_whitespace(string->data[new_length - 1])
+        character_is_whitespace(string->data[new_length - 1])
     ) {
         new_length--;
     }
