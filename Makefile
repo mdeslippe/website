@@ -24,7 +24,7 @@ else
 endif
 
 CPPFLAGS := -Iinclude -Ivendor
-CFLAGS := -std=c23 -Wall -Wextra -pedantic -MMD -MP
+CFLAGS := -std=c99 -Wall -Wextra -pedantic -MMD -MP
 LDFLAGS :=
 LDLIBS :=
 
