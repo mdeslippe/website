@@ -812,6 +812,10 @@ StringResult string_trim_end(String* string) {
         new_length--;
     }
 
+    if (new_length == string->length) {
+        return STRING_SUCCESS;
+    }
+
     string->length = new_length;
     string->data[new_length] = '\0';
 
