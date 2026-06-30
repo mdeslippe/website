@@ -7,6 +7,7 @@ PREFIX ?= $(HOME)/.local
 DESTDIR ?=
 
 SRC_DIR := src
+VENDOR_DIR := vendor
 BUILD_DIR := build
 BIN_DIR := bin
 
@@ -24,7 +25,7 @@ else
 endif
 
 CPPFLAGS := -Iinclude -Ivendor
-CFLAGS := -std=c99 -Wall -Wextra -pedantic -MMD -MP
+CFLAGS := -std=c11 -Wall -Wextra -pedantic -MMD -MP
 LDFLAGS :=
 LDLIBS :=
 
@@ -39,16 +40,22 @@ else
 endif
 
 SRCS := $(shell find $(SRC_DIR) -name '*.c')
+VENDOR_SRCS := $(shell find $(VENDOR_DIR) -name '*.c')
 OBJS := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
-DEPS := $(OBJS:.o=.d)
+VENDOR_OBJS := $(patsubst $(VENDOR_DIR)/%.c,$(BUILD_DIR)/$(VENDOR_DIR)/%.o,$(VENDOR_SRCS))
+DEPS := $(OBJS:.o=.d) $(VENDOR_OBJS:.o=.d)
 
 all: $(TARGET)
 
-$(TARGET): $(OBJS)
+$(TARGET): $(OBJS) $(VENDOR_OBJS)
 	@mkdir -p $(dir $@)
 	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/$(VENDOR_DIR)/%.o: $(VENDOR_DIR)/%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
