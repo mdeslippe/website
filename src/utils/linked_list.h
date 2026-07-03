@@ -117,12 +117,12 @@ typedef struct {
  *                          resources. The caller must call `linked_list_free`
  *                          before reinitializing.
  *
- * @param linked_list Pointer to the linked list to initialize.
+ * @param list Pointer to the linked list to initialize.
  *
  * @return LINKED_LIST_SUCCESS on success.
- * @return LINKED_LIST_ERROR_ARGUMENT if `linked_list` is NULL.
+ * @return LINKED_LIST_ERROR_ARGUMENT if `list` is NULL.
  */
-LinkedListResult linked_list_init(LinkedList* linked_list);
+LinkedListResult linked_list_init(LinkedList* list);
 
 /**
  * @brief Releases resources owned by a linked list.
@@ -138,11 +138,11 @@ LinkedListResult linked_list_init(LinkedList* linked_list);
  * @note Reinitialization - After this call, the list may be safely
  *                          reinitialized.
  *
- * @param linked_list Pointer to the linked list to free.
+ * @param list Pointer to the linked list to free.
  *
  * @return LINKED_LIST_SUCCESS on success.
- * @return LINKED_LIST_ERROR_ARGUMENT if `linked_list` is NULL.
+ * @return LINKED_LIST_ERROR_ARGUMENT if `list` is NULL.
  */
-LinkedListResult linked_list_free(LinkedList* linked_list);
+LinkedListResult linked_list_free(LinkedList* list);
 
 #endif

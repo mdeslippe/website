@@ -28,31 +28,31 @@
         ((list)->length != 1 || (list)->head == (list)->tail)       \
     )
 
-LinkedListResult linked_list_init(LinkedList* linked_list) {
+LinkedListResult linked_list_init(LinkedList* list) {
 
-    if (linked_list == NULL) {
+    if (list == NULL) {
         return LINKED_LIST_ERROR_ARGUMENT;
     }
 
-    linked_list->length = 0;
-    linked_list->head = NULL;
-    linked_list->tail = NULL;
+    list->length = 0;
+    list->head = NULL;
+    list->tail = NULL;
 
-    LINKED_LIST_ASSERT_VALID(linked_list);
+    LINKED_LIST_ASSERT_VALID(list);
 
     return LINKED_LIST_SUCCESS;
 
 }
 
-LinkedListResult linked_list_free(LinkedList* linked_list) {
+LinkedListResult linked_list_free(LinkedList* list) {
 
-    if (linked_list == NULL) {
+    if (list == NULL) {
         return LINKED_LIST_ERROR_ARGUMENT;
     }
 
-    LINKED_LIST_ASSERT_VALID(linked_list);
+    LINKED_LIST_ASSERT_VALID(list);
 
-    LinkedNode* current = linked_list->head;
+    LinkedNode* current = list->head;
     LinkedNode* next = NULL;
 
     while (current != NULL) {
@@ -61,11 +61,11 @@ LinkedListResult linked_list_free(LinkedList* linked_list) {
         current = next;
     }
 
-    linked_list->length = 0;
-    linked_list->head = NULL;
-    linked_list->tail = NULL;
+    list->length = 0;
+    list->head = NULL;
+    list->tail = NULL;
 
-    LINKED_LIST_ASSERT_VALID(linked_list);
+    LINKED_LIST_ASSERT_VALID(list);
 
     return LINKED_LIST_SUCCESS;
 
