@@ -80,6 +80,14 @@ typedef struct LinkedNode {
  *                   responsible for releasing them when no longer needed. The
  *                   list does not own the data pointed to by the `value` field
  *                   in each `LinkedNode`.
+ *
+ * @invariant After initialization:
+ * - `head == NULL` if and only if `length == 0`
+ * - `tail == NULL` if and only if `length == 0`
+ * - `head->previous == NULL` when `head != NULL`
+ * - `tail->next == NULL` when `tail != NULL`
+ * - `head == tail` when `length == 1`
+ * - `length` equals the number of nodes reachable from `head` via `next`
  */
 typedef struct {
     /**
