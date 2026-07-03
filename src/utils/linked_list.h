@@ -1,6 +1,8 @@
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
 
+#include <stddef.h>
+
 /**
  * @brief Result codes returned by linked list operations.
  *
@@ -43,6 +45,12 @@ typedef enum {
  * @note Ownership - The node does not own the data pointed to by `value`. The
  *                   caller is responsible for managing the lifetime of the
  *                   data.
+ *
+ * @invariant While linked into a list:
+ * - `previous == NULL` if and only if this is the first node
+ * - `next == NULL` if and only if this is the last node
+ * - `previous->next == this` when `previous != NULL`
+ * - `next->previous == this` when `next != NULL`
  */
 typedef struct LinkedNode {
     /**
