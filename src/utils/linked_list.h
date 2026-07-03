@@ -107,4 +107,42 @@ typedef struct {
     LinkedNode* tail;
 } LinkedList;
 
+/**
+ * @brief Initializes a linked list.
+ *
+ * Initializes the linked list to a valid, empty state.
+ *
+ * @note Reinitialization - Calling `linked_list_init` on an already initialized
+ *                          linked list does not release previously allocated
+ *                          resources. The caller must call `linked_list_free`
+ *                          before reinitializing.
+ *
+ * @param linked_list Pointer to the linked list to initialize.
+ *
+ * @return LINKED_LIST_SUCCESS on success.
+ * @return LINKED_LIST_ERROR_ARGUMENT if `linked_list` is NULL.
+ */
+LinkedListResult linked_list_init(LinkedList* linked_list);
+
+/**
+ * @brief Releases resources owned by a linked list.
+ *
+ * Releases all nodes and resets the linked list to a zero-initialized state.
+ *
+ * @note Ownership - The data pointed to by the `value` field in each
+ *                   `LinkedNode` is not freed.
+ *
+ * @note Idempotence - Calling `linked_list_free` on a previously freed or
+ *                     zero-initialized list is safe.
+ *
+ * @note Reinitialization - After this call, the list may be safely
+ *                          reinitialized.
+ *
+ * @param linked_list Pointer to the linked list to free.
+ *
+ * @return LINKED_LIST_SUCCESS on success.
+ * @return LINKED_LIST_ERROR_ARGUMENT if `linked_list` is NULL.
+ */
+LinkedListResult linked_list_free(LinkedList* linked_list);
+
 #endif
