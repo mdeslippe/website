@@ -70,4 +70,32 @@ typedef struct LinkedNode {
     struct LinkedNode* next;
 } LinkedNode;
 
+/**
+ * @brief A doubly linked list.
+ *
+ * Represents a mutable doubly linked list with heap-allocated nodes. Nodes are
+ * allocated and released as elements are added and removed.
+ *
+ * @note Ownership - Each LinkedList instance owns its internal nodes and is
+ *                   responsible for releasing them when no longer needed. The
+ *                   list does not own the data pointed to by the `value` field
+ *                   in each `LinkedNode`.
+ */
+typedef struct {
+    /**
+     * Number of nodes in the list.
+     */
+    size_t length;
+
+    /**
+     * Pointer to the first node in the list, or NULL if the list is empty.
+     */
+    LinkedNode* head;
+
+    /**
+     * Pointer to the last node in the list, or NULL if the list is empty.
+     */
+    LinkedNode* tail;
+} LinkedList;
+
 #endif
