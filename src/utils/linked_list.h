@@ -34,4 +34,32 @@ typedef enum {
     LINKED_LIST_ERROR_ALLOCATION = 3
 } LinkedListResult;
 
+/**
+ * @brief A node in a doubly linked list.
+ *
+ * Represents a single element in a doubly linked list, containing a pointer to
+ * user-provided data and links to adjacent nodes.
+ *
+ * @note Ownership - The node does not own the data pointed to by `value`. The
+ *                   caller is responsible for managing the lifetime of the
+ *                   data.
+ */
+typedef struct LinkedNode {
+    /**
+     * Pointer to user-provided data.
+     */
+    void* value;
+
+    /**
+     * Pointer to the previous node in the list, or NULL if this is the first
+     * node.
+     */
+    struct LinkedNode* previous;
+
+    /**
+     * Pointer to the next node in the list, or NULL if this is the last node.
+     */
+    struct LinkedNode* next;
+} LinkedNode;
+
 #endif
