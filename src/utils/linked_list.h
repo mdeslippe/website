@@ -171,7 +171,7 @@ LinkedListResult linked_list_clear(LinkedList* list);
  * @pre `list` must be initialized with `linked_list_init`.
  *
  * @note Ownership - The linked list does not take ownership of the data pointed
- *                   to by `value`. The caller is responsible for managing its 
+ *                   to by `value`. The caller is responsible for managing its
  *                   lifetime.
  *
  * @note Success - The new node becomes the head of the linked list.
@@ -196,7 +196,7 @@ LinkedListResult linked_list_push_front(LinkedList* list, void* value);
  * @pre `list` must be initialized with `linked_list_init`.
  *
  * @note Ownership - The linked list does not take ownership of the data pointed
- *                   to by `value`. The caller is responsible for managing its 
+ *                   to by `value`. The caller is responsible for managing its
  *                   lifetime.
  *
  * @note Success - The new node becomes the tail of the linked list.
