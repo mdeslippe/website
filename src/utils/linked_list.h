@@ -133,9 +133,9 @@ LinkedListResult linked_list_init(LinkedList* list);
  *                   `LinkedNode` is not freed.
  *
  * @note Idempotence - Calling `linked_list_free` on a previously freed or
- *                     zero-initialized list is safe.
+ *                     zero-initialized linked list is safe.
  *
- * @note Reinitialization - After this call, the list may be safely
+ * @note Reinitialization - After this call, the linked list may be safely
  *                          reinitialized.
  *
  * @param list Pointer to the linked list to free.
