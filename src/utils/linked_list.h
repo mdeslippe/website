@@ -145,4 +145,21 @@ LinkedListResult linked_list_init(LinkedList* list);
  */
 LinkedListResult linked_list_free(LinkedList* list);
 
+/**
+ * @brief Removes all elements from a linked list.
+ *
+ * Releases all nodes and resets the linked list to a valid, empty state.
+ *
+ * @pre `list` must be initialized with `linked_list_init`.
+ *
+ * @note Ownership - The data pointed to by the `value` field in each
+ *                   `LinkedNode` is not freed.
+ *
+ * @param list Pointer to the initialized linked list.
+ *
+ * @return LINKED_LIST_SUCCESS on success.
+ * @return LINKED_LIST_ERROR_ARGUMENT if `list` is NULL.
+ */
+LinkedListResult linked_list_clear(LinkedList* list);
+
 #endif
