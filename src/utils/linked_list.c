@@ -70,3 +70,30 @@ LinkedListResult linked_list_free(LinkedList* list) {
     return LINKED_LIST_SUCCESS;
 
 }
+
+LinkedListResult linked_list_clear(LinkedList* list) {
+
+    if (list == NULL) {
+        return LINKED_LIST_ERROR_ARGUMENT;
+    }
+
+    LINKED_LIST_ASSERT_VALID(list);
+
+    LinkedNode* current = list->head;
+    LinkedNode* next = NULL;
+
+    while (current != NULL) {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+
+    list->length = 0;
+    list->head = NULL;
+    list->tail = NULL;
+
+    LINKED_LIST_ASSERT_VALID(list);
+
+    return LINKED_LIST_SUCCESS;
+
+}
