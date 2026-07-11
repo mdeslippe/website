@@ -42,7 +42,7 @@ typedef enum {
 } StringResult;
 
 /**
- * @brief Dynamically resizable, heap-allocated string.
+ * @brief A dynamically resizable, heap-allocated string.
  *
  * Represents a mutable, null-terminated character buffer stored on the heap.
  * The buffer grows automatically as needed to accommodate additional
