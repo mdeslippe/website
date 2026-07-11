@@ -86,7 +86,7 @@ typedef struct LinkedNode {
  * - `tail == NULL` if and only if `length == 0`
  * - `head->previous == NULL` when `head != NULL`
  * - `tail->next == NULL` when `tail != NULL`
- * - `head == tail` when `length == 1`
+ * - `head == tail` if and only if `length <= 1`
  * - `length` equals the number of nodes reachable from `head` via `next`
  * - `length` equals the number of nodes reachable from `tail` via `previous`
  */
