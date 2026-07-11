@@ -97,3 +97,69 @@ LinkedListResult linked_list_clear(LinkedList* list) {
     return LINKED_LIST_SUCCESS;
 
 }
+
+LinkedListResult linked_list_push_front(LinkedList* list, void* value) {
+
+    if (list == NULL) {
+        return LINKED_LIST_ERROR_ARGUMENT;
+    }
+
+    LINKED_LIST_ASSERT_VALID(list);
+
+    LinkedNode* node = malloc(sizeof(LinkedNode));
+
+    if (node == NULL) {
+        return LINKED_LIST_ERROR_ALLOCATION;
+    }
+
+    node->previous = NULL;
+    node->next = list->head;
+    node->value = value;
+
+    list->head = node;
+    list->length += 1;
+
+    if (node->next == NULL) {
+        list->tail = node;
+    } else {
+        node->next->previous = node;
+    }
+
+    LINKED_LIST_ASSERT_VALID(list);
+
+    return LINKED_LIST_SUCCESS;
+
+}
+
+LinkedListResult linked_list_push_back(LinkedList* list, void* value) {
+
+    if (list == NULL) {
+        return LINKED_LIST_ERROR_ARGUMENT;
+    }
+
+    LINKED_LIST_ASSERT_VALID(list);
+
+    LinkedNode* node = malloc(sizeof(LinkedNode));
+
+    if (node == NULL) {
+        return LINKED_LIST_ERROR_ALLOCATION;
+    }
+
+    node->previous = list->tail;
+    node->next = NULL;
+    node->value = value;
+
+    list->tail = node;
+    list->length += 1;
+
+    if (node->previous == NULL) {
+        list->head = node;
+    } else {
+        node->previous->next = node;
+    }
+
+    LINKED_LIST_ASSERT_VALID(list);
+
+    return LINKED_LIST_SUCCESS;
+
+}
