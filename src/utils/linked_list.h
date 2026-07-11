@@ -54,11 +54,6 @@ typedef enum {
  */
 typedef struct LinkedNode {
     /**
-     * Pointer to user-provided data.
-     */
-    void* value;
-
-    /**
      * Pointer to the previous node in the list, or NULL if this is the first
      * node.
      */
@@ -68,6 +63,11 @@ typedef struct LinkedNode {
      * Pointer to the next node in the list, or NULL if this is the last node.
      */
     struct LinkedNode* next;
+
+    /**
+     * Pointer to user-provided data.
+     */
+    void* value;
 } LinkedNode;
 
 /**
