@@ -145,4 +145,71 @@ LinkedListResult linked_list_init(LinkedList* list);
  */
 LinkedListResult linked_list_free(LinkedList* list);
 
+/**
+ * @brief Removes all elements from a linked list.
+ *
+ * Releases all nodes and resets the linked list to a valid, empty state.
+ *
+ * @pre `list` must be initialized with `linked_list_init`.
+ *
+ * @note Ownership - The data pointed to by the `value` field in each
+ *                   `LinkedNode` is not freed.
+ *
+ * @param list Pointer to the initialized linked list.
+ *
+ * @return LINKED_LIST_SUCCESS on success.
+ * @return LINKED_LIST_ERROR_ARGUMENT if `list` is NULL.
+ */
+LinkedListResult linked_list_clear(LinkedList* list);
+
+/**
+ * @brief Inserts an element at the front of a linked list.
+ *
+ * Allocates a new node containing `value` and inserts it at the front of the
+ * linked list.
+ *
+ * @pre `list` must be initialized with `linked_list_init`.
+ *
+ * @note Ownership - The linked list does not take ownership of the data pointed
+ *                   to by `value`. The caller is responsible for managing its
+ *                   lifetime.
+ *
+ * @note Success - The new node becomes the head of the linked list.
+ *
+ * @note Failure - The linked list remains unmodified.
+ *
+ * @param list Pointer to the initialized linked list.
+ * @param value Pointer to the user-provided data to store. May be NULL.
+ *
+ * @return LINKED_LIST_SUCCESS on success.
+ * @return LINKED_LIST_ERROR_ARGUMENT if `list` is NULL.
+ * @return LINKED_LIST_ERROR_ALLOCATION if memory allocation fails.
+ */
+LinkedListResult linked_list_push_front(LinkedList* list, void* value);
+
+/**
+ * @brief Inserts an element at the back of a linked list.
+ *
+ * Allocates a new node containing `value` and inserts it at the back of the
+ * linked list.
+ *
+ * @pre `list` must be initialized with `linked_list_init`.
+ *
+ * @note Ownership - The linked list does not take ownership of the data pointed
+ *                   to by `value`. The caller is responsible for managing its
+ *                   lifetime.
+ *
+ * @note Success - The new node becomes the tail of the linked list.
+ *
+ * @note Failure - The linked list remains unmodified.
+ *
+ * @param list Pointer to the initialized linked list.
+ * @param value Pointer to the user-provided data to store. May be NULL.
+ *
+ * @return LINKED_LIST_SUCCESS on success.
+ * @return LINKED_LIST_ERROR_ARGUMENT if `list` is NULL.
+ * @return LINKED_LIST_ERROR_ALLOCATION if memory allocation fails.
+ */
+LinkedListResult linked_list_push_back(LinkedList* list, void* value);
+
 #endif
